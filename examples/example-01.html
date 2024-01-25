@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labyrinth Spiel</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <script>
+    function checkCollisions() {
+      // Kollision mit Wänden
+      maze.forEach(wall => {
+        if (
+                player.x < wall.x + wall.width &&
+                player.x + player.width > wall.x &&
+                player.y < wall.y + wall.height &&
+                player.y + player.height > wall.y
+        ) {
+          // Kollision mit Wand! Hier kannst du weitere Aktionen hinzufügen.
+          console.log("Kollision mit Wand!");
+        }
+      });
+
+      // Kollision mit dem Ziel
+      if (
+              player.x < goal.x + goal.width &&
+              player.x + player.width > goal.x &&
+              player.y < goal.y + goal.height &&
+              player.y + player.height > goal.y
+      ) {
+        // Ziel erreicht! Hier kannst du weitere Aktionen hinzufügen.
+        console.log("Ziel erreicht!");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // Spielerobjekt
+      const player = {
+        x: 50,
+        y: 50,
+        width: 20,
+        height: 20,
+        color: "#00F"
+      };
+
+      // Zielobjekt
+      const goal = {
+        x: 350,
+        y: 350,
+        width: 20,
+        height: 20,
+        color: "#F00"
+      };
+
+      // Labyrinth
+      const maze = [
+        { x: 100, y: 0, width: 20, height: 200 },
+        { x: 200, y: 200, width: 20, height: 200 },
+        { x: 0, y: 300, width: 200, height: 20 }
+        // Füge hier weitere Labyrinthabschnitte hinzu
+      ];
+
+      // Zeichenfunktion
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Zeichne den Spieler
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+
+        // Zeichne das Ziel
+        ctx.fillStyle = goal.color;
+        ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+
+        // Zeichne das Labyrinth
+        ctx.fillStyle = "#999";
+        maze.forEach(wall => {
+          ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+        });
+      }
+
+      // Überprüfe Kollisionen
+      function checkCollisions() {
+        // Kollision mit Wänden
+        maze.forEach(wall => {
+          if (
+            player.x < wall.x + wall.width &&
+            player.x + player.width > wall.x &&
+            player.y < wall.y + wall.height &&
+            player.y + player.height > wall.y
+          ) {
+            // Kollision! Hier kannst du weitere Aktionen hinzufügen.
+            console.log("Kollision mit Wand!");
+          }
+        });
+
+        // Kollision mit dem Ziel
+        if (
+          player.x < goal.x + goal.width &&
+          player.x + player.width > goal.x &&
+          player.y < goal.y + goal.height &&
+          player.y + player.height > goal.y
+        ) {
+          // Ziel erreicht! Hier kannst du weitere Aktionen hinzufügen.
+          console.log("Ziel erreicht!");
+        }
+      }
+
+      // Spielschleife
+      function gameLoop() {
+        draw();
+        checkCollisions();
+        requestAnimationFrame(gameLoop);
+      }
+
+      // Tastensteuerung für den Spieler
+      document.addEventListener("keydown", function(e) {
+        switch (e.key) {
+          case "ArrowUp":
+            player.y -= 5;
+            break;
+          case "ArrowDown":
+            player.y += 5;
+            break;
+          case "ArrowLeft":
+            player.x -= 5;
+            break;
+          case "ArrowRight":
+            player.x += 5;
+            break;
+        }
+
+        checkCollisions();
+      });
+
+      // Starte das Spiel
+      gameLoop();
+    });
+  </script>
+</body>
+</html>
